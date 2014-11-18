@@ -49,7 +49,15 @@ public class GraphGUI extends JFrame {
 	 */
 	public GraphGUI() {
 		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 540, 540);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
 		points = new ArrayList<>();		
+		height = getSize();
 		
 		try( Scanner reader = new Scanner( GraphGUI.class.getResourceAsStream("plots.csv")) ){
 			
@@ -66,20 +74,16 @@ public class GraphGUI extends JFrame {
 			}
 		}
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 540, 540);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
-		
-		height = getSize();
-		
 		JLabel lblTitle = new JLabel( "Graph" );
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(lblTitle, BorderLayout.NORTH);
 		
+		JPanel graphPanel = new JPanel();
+		contentPane.add(graphPanel, BorderLayout.CENTER);		
+		
+		JPanel graphBox = new GraphBox();
+		graphPanel.add(graphBox);
 		
 	}
 	
@@ -95,8 +99,7 @@ public class GraphGUI extends JFrame {
 			g.fillOval( p.getX()-4,intHeight - p.getY()-4,10,10 );			
 			holdX = p.getX();
 			holdY = intHeight - p.getY();
-		}
-		
+		}		
 	}
 
 	private static Point getPoint( String[] point ) {
@@ -107,6 +110,33 @@ public class GraphGUI extends JFrame {
 		Point temp = new Point( x,y );
 		
 		return temp;
+	}
+	
+	class GraphBox extends JPanel{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		GraphBox(){
+			setPreferredSize( new Dimension( 300,300 ) );
+		}
+		
+		public void paint( Graphics g ){
+			g.setColor(Color.BLACK);
+			
+			int intHeight = height.height;
+			int holdX = 0;
+			int holdY = intHeight;
+			System.out.println("Height: "+ intHeight);
+			for( Point p : points ){
+				g.drawLine( holdX,holdY,p.getX(),intHeight - p.getY() );
+				g.fillOval( p.getX()-4,intHeight - p.getY()-4,10,10 );			
+				holdX = p.getX();
+				holdY = intHeight - p.getY();
+			}		
+		}
+		
 	}
 
 }
