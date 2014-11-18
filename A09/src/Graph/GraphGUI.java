@@ -2,6 +2,7 @@ package Graph;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 
@@ -25,6 +26,7 @@ public class GraphGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private static List<Point> points;
+	private Dimension height;
 
 	/**
 	 * Launch the application.
@@ -47,7 +49,7 @@ public class GraphGUI extends JFrame {
 	 */
 	public GraphGUI() {
 		
-		points = new ArrayList<>();
+		points = new ArrayList<>();		
 		
 		try( Scanner reader = new Scanner( GraphGUI.class.getResourceAsStream("plots.csv")) ){
 			
@@ -71,26 +73,28 @@ public class GraphGUI extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
+		height = getSize();
+		
 		JLabel lblTitle = new JLabel( "Graph" );
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		contentPane.add(lblTitle, BorderLayout.NORTH);
+		
+		
 	}
 	
 	public void paint( Graphics g ){
 		g.setColor(Color.BLACK);
 		
+		int intHeight = height.height;
 		int holdX = 0;
-		int holdY = 0;
+		int holdY = intHeight;
 		
 		for( Point p : points ){
-			System.out.printf( "holdX: %d holdY: %d%n", holdX, holdY );
-			System.out.println(p);
-			System.out.println();
-			g.drawLine( holdX,holdY,p.getX(),p.getY() );
-			g.fillOval( p.getX()-4,p.getY()-4,10,10 );			
+			g.drawLine( holdX,holdY,p.getX(),intHeight - p.getY() );
+			g.fillOval( p.getX()-4,intHeight - p.getY()-4,10,10 );			
 			holdX = p.getX();
-			holdY = p.getY();
+			holdY = intHeight - p.getY();
 		}
 		
 	}
